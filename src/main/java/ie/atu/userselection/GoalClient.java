@@ -7,8 +7,8 @@ import ie.atu.userselection.GymGoal;
 import java.util.List;
 
 
-@FeignClient(name = "goal-service", url = "http://localhost:8082/api/gym-goal")
+@FeignClient(name = "goal-service", url = "http://localhost:8082")
 public interface GoalClient {
-    @GetMapping("/{id}")
+    @GetMapping("/api/gym-goal/{id}")
     GymGoal getGymGoalById(@PathVariable("id") Long id);
 }
