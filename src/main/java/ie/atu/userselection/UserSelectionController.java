@@ -15,10 +15,12 @@ public class UserSelectionController {
 
     private final UserSelectionRepository userSelectionRepository;
     private final GoalClient goalClient;
+    private final ExperienceLevelClient experienceLevelClient;
 
-    public UserSelectionController(UserSelectionRepository userSelectionRepository, GoalClient goalClient) {
+    public UserSelectionController(UserSelectionRepository userSelectionRepository, GoalClient goalClient, ExperienceLevelClient experienceLevelClient) {
         this.userSelectionRepository = userSelectionRepository;
         this.goalClient = goalClient;
+        this.experienceLevelClient = experienceLevelClient;
     }
 
     // Get all user selections
@@ -42,12 +44,14 @@ public class UserSelectionController {
 
         // Fetch GymGoal data from the external service using Feign client
         GymGoal gymGoal = goalClient.getGymGoalById(userSelection.getGoalId());
+        Map<String, Double> exerciseWeights = experienceLevelClient.calculateWeights(userSelection.getExpId());
 
-        // Prepare the response with sets and reps
+        // Prepare the response
         Map<String, Object> response = new HashMap<>();
         response.put("userSelectionId", savedSelection.getSelectId());
         response.put("sets", gymGoal.getSets());
         response.put("reps", gymGoal.getReps());
+        response.put("Workout", exerciseWeights);
 
         return ResponseEntity.ok(response);
     }
