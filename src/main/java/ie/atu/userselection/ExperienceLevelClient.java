@@ -6,9 +6,9 @@ import org.springframework.web.bind.annotation.PathVariable;
 
 import java.util.Map;
 
-@FeignClient(name = "experience-level-service", url = "http://localhost:8081/api")
+@FeignClient(name = "experience-level-service", url = "http://localhost:8081/api/experience-level")
 public interface ExperienceLevelClient {
 
-    @GetMapping("/exercise/calculate-weights/{expId}")
-    Map<String, Double> calculateWeights(@PathVariable Long expId);
+    @GetMapping("/{experienceId}/weights/{weightId}")
+    Map<String, Object> calculateWeights(@PathVariable Long experienceId, @PathVariable Long weightId);
 }

@@ -22,10 +22,6 @@ public class UserSelection {
         return selectId;
     }
 
-    public void setSelectId(Long selectId) {
-        this.selectId = selectId;
-    }
-
     public Long getWeightId() {
         return weightId;
     }

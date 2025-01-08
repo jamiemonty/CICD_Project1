@@ -23,20 +23,17 @@ public class UserSelectionController {
         this.experienceLevelClient = experienceLevelClient;
     }
 
-    // Get all user selections
     @GetMapping
     public List<UserSelection> getAllUserSelections() {
         return userSelectionRepository.findAll();
     }
 
-    // Get a specific user selection by ID
     @GetMapping("/{id}")
     public ResponseEntity<UserSelection> getUserSelectionById(@PathVariable Long id) {
         Optional<UserSelection> userSelection = userSelectionRepository.findById(id);
         return userSelection.map(ResponseEntity::ok).orElseGet(() -> ResponseEntity.notFound().build());
     }
 
-    // Create a new user selection
     @PostMapping
     public ResponseEntity<Map<String, Object>> createUserSelection(@RequestBody UserSelection userSelection) {
         // Save the user selection to the database
@@ -44,7 +41,7 @@ public class UserSelectionController {
 
         // Fetch GymGoal data from the external service using Feign client
         GymGoal gymGoal = goalClient.getGymGoalById(userSelection.getGoalId());
-        Map<String, Double> exerciseWeights = experienceLevelClient.calculateWeights(userSelection.getExpId());
+        Map<String, Object> exerciseWeights = experienceLevelClient.calculateWeights(userSelection.getExpId(), userSelection.getWeightId());
 
         // Prepare the response
         Map<String, Object> response = new HashMap<>();
@@ -56,7 +53,6 @@ public class UserSelectionController {
         return ResponseEntity.ok(response);
     }
 
-    // Update an existing user selection
     @PutMapping("/{id}")
     public ResponseEntity<UserSelection> updateUserSelection(@PathVariable Long id, @RequestBody UserSelection updatedSelection) {
         Optional<UserSelection> existingSelection = userSelectionRepository.findById(id);
@@ -70,7 +66,6 @@ public class UserSelectionController {
         return ResponseEntity.notFound().build();
     }
 
-    // Delete a user selection
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> deleteUserSelection(@PathVariable Long id) {
         if (userSelectionRepository.existsById(id)) {
